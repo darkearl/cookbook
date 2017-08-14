@@ -4,6 +4,8 @@
 # ARRAY UTILITIES #
 ###################
 
+
+
 function arrayToString()
 {
     local -r array=("${@}")
@@ -16,9 +18,7 @@ function arrayToStringWithDelimiter()
     local -r delimiter="${1}"
     local -r array=("${@:2}")
 
-    local -r string="$(printf "%s${delimiter}" "${array[@]}")"
-
-    echo "${string:0:${#string} - ${#delimiter}}"
+    printf "%s${delimiter}" "${array[@]}"
 }
 
 function sortUniqArray()
