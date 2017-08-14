@@ -40,7 +40,7 @@ function downloadSource()
     echo
     downloadFile
     # backup
-    prompt_user backupName "Enter name of backup folder:" 'abcdxyz'
+    prompt_user backupName "Enter name of backup folder:"
     read -a BACKUP_FOLDER <<< $(backupFile ${backupName})
     
     info "See folder "${TMP_FOLDER}" for more infomation..."

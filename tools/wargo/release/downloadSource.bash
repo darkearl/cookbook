@@ -3,7 +3,7 @@
 function getSvnLogs()
 {
     local result=''
-    prompt_user taskIds "Please input task ids(ex: 123 456):" '20511'
+    prompt_user taskIds "Please input task ids(ex: 123 456):"
     local array=(${taskIds[@]})
     for taskId in "${array[@]}"
     do
