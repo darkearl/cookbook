@@ -9,34 +9,30 @@ function wargoMinify(){
     # others
     minifyFile=0
 
-    echo "-------------------------------------------------------------------------------------------------------------------"
-
-    echo "-------- Create back up file map from $mapJsCssPath"
+    debug "Create back up file map from $mapJsCssPath"
     if [ -f "$mapJsCssPath" ]; then
         cp "$mapJsCssPath" "$mapJsCssPathTemp"
     else
         echo "" > ${mapJsCssPathTemp}
     fi
 
+    debug "Check contents of $inputFile"
     if [ -f "$inputFile" ]; then
-        echo "-------- Check contents of $inputFile"
         while read line ; do
             sourceCodeFile="${sourceCodeDir}/${line}"
-            echo ${sourceCodeFile}
+            fullName=$(basename "$sourceCodeFile")
             if [ -f "$sourceCodeFile" ]; then
                 minifyFile=1
                 # coppy minified file
-                fullName=$(basename "$sourceCodeFile")
                 fileName="${fullName%.*}"
                 fileExt="${fullName##*.}"
-
                 # minify file
-                echo "---------------- $sourceCodeFile `minify -c --template $fileName-{{md5}}.min.$fileExt $sourceCodeFile`"
-
+                minify -c --template "$fileName-{{md5}}.min.$fileExt" "$sourceCodeFile" >/dev/null 
+                
                 minifyFileOutTpl=$(dirname "$sourceCodeFile")"/$fileName-*.min.$fileExt"
                 minifyFileOut=`ls $minifyFileOutTpl | head -n 1`
                 if [ -f "$minifyFileOut" ]; then
-                    echo "---------------- $minifyFileOut (Minified)"
+                    echo "${fullName} >> $(basename "$minifyFileOut")"
                     # edit file map
                     mapNumlimes=`grep -r -n "$line:" $mapJsCssPathTemp | cut -d : -f 1`
                     firstLine=1
@@ -58,21 +54,20 @@ function wargoMinify(){
                     fi
                 fi
             else
-                echo "---------------- $sourceCodeFile does not exist"
+                warn "File ${fullName} does not exist"
             fi
         done < $inputFile
     else
-        echo "-------- $inputFile does not exist"
+        echo "$inputFile does not exist"
     fi
 
     if [ $minifyFile -eq 0 ]; then
-        echo "-------- There is no file to minify"
+        warn "There is no file to minify"
     else
-        echo "-------- Create new file map to $mapJsCssPath"
+        debug "Create new file map to $mapJsCssPath"
         grep -o -E ".*\.min\.css$" $mapJsCssPathTemp | sort | uniq > $mapJsCssPath
         grep -o -E ".*\.min\.js$" $mapJsCssPathTemp | sort | uniq >> $mapJsCssPath
     fi
     rm $mapJsCssPathTemp
-    echo "-------------------------------------------------------------------------------------------------------------------"
 
 }
