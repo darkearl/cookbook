@@ -26,7 +26,7 @@ function install()
     local -r module_NPS_folder="${tempNgxPageSpeedFolder}/ngx_pagespeed-${NPS_VERSION}-stable"
 
     local -r tempPsolFolder="${module_NPS_folder}/psol"
-    mkdir -p "${tempPsolFolder}"
+    sudo mkdir -p "${tempPsolFolder}"
     unzipRemoteFile "${NGINX_MODULE_NGX_PAGESPEED_PSOL}" "${tempPsolFolder}"
 
     # Install
