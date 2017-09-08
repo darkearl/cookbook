@@ -49,11 +49,6 @@ function isDistributor()
     fi
 }
 
-function getCustomFolder()
-{
-    mktemp -d "$(getTemporaryFolderRoot)/$(date +'%Y%m%d-%H%M%S')-XXXXXXXXXX"
-}
-
 function getTemporaryFolder()
 {
     mktemp -d "$(getTemporaryFolderRoot)/$(date +'%Y%m%d-%H%M%S')-XXXXXXXXXX"

@@ -30,7 +30,7 @@ function downloadSource()
     case $step in
         1 ) getSvnLogs;;
         2 ) copyFileDownloadInput;;
-        *) fatal 'Invalid response -- please reenter:';
+        *) echo -n 'Invalid response';
            downloadSource;;
     esac
 
@@ -44,8 +44,6 @@ function downloadSource()
     read -a BACKUP_FOLDER <<< $(backupFile ${backupName})
     
     info "See folder "${TMP_FOLDER}" for more infomation..."
-    # return main menu
-    goToMain
 }
 
 function uploadSource(){
@@ -60,8 +58,6 @@ function uploadSource(){
     else
         filezilla -c "0/wargo" -a "${BACKUP_FOLDER[1]}"
     fi
-
-    goToMain
 }
 
 function compareSource(){
@@ -76,7 +72,6 @@ function compareSource(){
     else
         bcompare "${SOURCE_DEV_WARGO}" ${BACKUP_FOLDER[1]}
     fi
-    goToMain
 }
 
 function minifySource(){
@@ -91,7 +86,6 @@ function minifySource(){
     else
         wargoMinify
     fi
-    goToMain
 }
 
 
@@ -127,11 +121,10 @@ function main()
         2 ) compareSource;;
         3 ) minifySource;;
         4 ) uploadSource;;
-        5 ) printFolder ${BACKUP_FOLDER[1]};
-            goToMain;;
-        *)  echo -n 'Invalid response -- exit;';
-            exit;;
+        5 ) printFolder ${BACKUP_FOLDER[1]};;
+        *)  echo -n 'Invalid response';;
     esac
+    goToMain
 }
 
 main "${@}"

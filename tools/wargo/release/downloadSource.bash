@@ -69,7 +69,7 @@ function searchSvn()
 }
 
 function copyFileDownloadInput(){
-    prompt_user inputFilePath "Input path:" '/media/projects/wargo_site/tools/wargo_new_download/shell_script/download/input.txt'
+    prompt_user inputFilePath "Input path:" '/media/projects/wargo_site/tools/release_backup/input.txt'
 
     checkExistFile "${inputFilePath}"
 

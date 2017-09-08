@@ -24,8 +24,8 @@ function wargoMinify(){
             if [ -f "$sourceCodeFile" ]; then
                 minifyFile=1
                 # coppy minified file
-                fileName="${fullName%.*}"
-                fileExt="${fullName##*.}"
+                fileName="$(getFileName $sourceCodeFile)"
+                fileExt="$(getFileExtension $sourceCodeFile)"
                 # minify file
                 minify -c --template "$fileName-{{md5}}.min.$fileExt" "$sourceCodeFile" >/dev/null 
                 
@@ -33,25 +33,9 @@ function wargoMinify(){
                 minifyFileOut=`ls $minifyFileOutTpl | head -n 1`
                 if [ -f "$minifyFileOut" ]; then
                     echo "${fullName} >> $(basename "$minifyFileOut")"
-                    # edit file map
-                    mapNumlimes=`grep -r -n "$line:" $mapJsCssPathTemp | cut -d : -f 1`
-                    firstLine=1
-                    nomap=0
-                    newtextline="$line:`dirname $line`/`basename $minifyFileOut`"
-                    for mapNumlime in $mapNumlimes; do
-                        if [ $firstLine -eq 1 ]; then
-                            sed -i "$mapNumlime c $newtextline" $mapJsCssPathTemp
-                        else
-                            sed -i "$mapNumlime d" $mapJsCssPathTemp
-                        fi
-                        firstLine=0
-                        nomap=1
-                    done
-                    firstLine=0
-
-                    if [ $nomap -eq 0 ]; then
-                        sed -i "$ i $newtextline" $mapJsCssPathTemp
-                    fi
+                    local -r partentToSearch="$line:"
+                    local -r stringToReplace="$line:`dirname $line`/`basename $minifyFileOut`"
+                    replaceOrAppendToFile "${mapJsCssPathTemp}" "${partentToSearch}" "${stringToReplace}"
                 fi
             else
                 warn "File ${fullName} does not exist"
